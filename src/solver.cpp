@@ -100,10 +100,10 @@ struct sortByStringLength {
     	}
     }
 };
-set<string, sortByStringLength> wordsFound;
 
 
-void solver( Char* board, const int nRows, const int nCols,
+void solver( set<string,sortByStringLength>& wordsFound, 
+				Char* board, const int nRows, const int nCols,
 				char* str, int strLen, const int maxStrLen,
 				int x, int y,
 				int* dawg, int dawgIdx = 0 )
@@ -156,14 +156,14 @@ void solver( Char* board, const int nRows, const int nCols,
 		wordsFound.insert(str);
 	}
 
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x-1, y-1, dawg, dawgIdx );  // upper-left
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x-1, y,   dawg, dawgIdx );  // upper-center
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x-1, y+1, dawg, dawgIdx );  // upper-right
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x,   y-1, dawg, dawgIdx );  // left
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x,   y+1, dawg, dawgIdx );  // right
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x+1, y-1, dawg, dawgIdx );  // bottom-left
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x+1, y,   dawg, dawgIdx );  // bottom-center
-	solver( board, nRows, nCols, str, strLen, maxStrLen, x+1, y+1, dawg, dawgIdx );  // bottom-right
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y-1, dawg, dawgIdx );  // upper-left
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y,   dawg, dawgIdx );  // upper-center
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y+1, dawg, dawgIdx );  // upper-right
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y-1, dawg, dawgIdx );  // left
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y+1, dawg, dawgIdx );  // right
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y-1, dawg, dawgIdx );  // bottom-left
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y,   dawg, dawgIdx );  // bottom-center
+	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y+1, dawg, dawgIdx );  // bottom-right
 
 	// remove the char from the string and set to unvisited
 	strLen -= 1;
@@ -184,6 +184,7 @@ int main( int argc, char* argv[] )
 
 	Char* board = new Char[N_ROWS*N_COLS];
 	char str[MAX_STRING_LENGTH];
+	set<string, sortByStringLength> wordsFound;
 
 	//
 	// SOLVE A STATIC STRING
@@ -225,7 +226,7 @@ int main( int argc, char* argv[] )
 		{
 			for ( int j = 0; j < N_COLS; ++j )
 			{
-				solver( board, N_ROWS, N_COLS, str, 0, MAX_STRING_LENGTH, i, j, dawg );
+				solver( wordsFound, board, N_ROWS, N_COLS, str, 0, MAX_STRING_LENGTH, i, j, dawg );
 			}
 		}
 		auto itr = wordsFound.begin(), end = wordsFound.end();
