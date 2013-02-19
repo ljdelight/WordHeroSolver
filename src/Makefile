@@ -1,5 +1,7 @@
 CC=g++
-FLAGS=-O3 -std=c++11 -Wall
+CXXFLAGS=-O3 -std=c++11 -Wall
+C=gcc
+CFLAGS=
 PROJECT=wordHeroSolver
 FILES=solver.cpp Makefile $(PROJECT) \
 	Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c dictionary.dat \
@@ -7,19 +9,20 @@ FILES=solver.cpp Makefile $(PROJECT) \
 	Word-List.txt
 
 $(PROJECT): solver.o dictionary.dat
-	$(CC) $(FLAGS) solver.o -o $@
+	$(CC) $(CXXFLAGS) $< -o $@
 
 solver.o: solver.cpp
-	$(CC) $(FLAGS) -c $^
+	$(CC) $(CXXFLAGS) -c -o $@ $^
 
-dictionary.dat: CRC-32.dat Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c
-	gcc -g Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c -o builddict
-	./builddict
+
+dictionary.dat: Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
+	$(C) $(CFLAGS) $< -o builddict
+	./builddict > /dev/null
 	rm ./builddict
 
 CRC-32.dat: Compile-CRC-32-Lookup-Table.c
-	gcc -g $^ -o buildcrc
-	./buildcrc
+	$(C) $(CFLAGS) $^ -o buildcrc
+	./buildcrc >/dev/null
 	rm ./buildcrc
 
 tar: $(PROJECT)
