@@ -175,13 +175,7 @@ void solver( Char* board, const int nRows, const int nCols,
 
 int main( int argc, char* argv[] )
 {
-	if ( argc != 2 )
-	{
-		cerr << "Missing args: solver <dictionary_BIN>" << endl;
-		exit(1);
-	}
-
-	int *dawg = initDawg(argv[1]);
+	int *dawg = initDawg( "dictionary.dat" );
 	if ( !dawg )
 	{
 		cerr << "could not initialize the DAWG (bad file?)" << endl;
@@ -220,7 +214,7 @@ int main( int argc, char* argv[] )
 	//
 	string input;
 	cout << "Enter board: " << endl;
-	while ( getline( cin,input) )
+	while ( getline( cin,input ) )
 	{
 		for ( size_t i = 0; i < input.size(); ++i )
 		{
