@@ -11,16 +11,18 @@ FILES=solver.cpp Makefile $(PROJECT) \
 $(PROJECT): solver.o dictionary.dat
 	$(CC) $(CXXFLAGS) $< -o $@
 
-solver.o: solver.cpp
+solver.o: src/solver.cpp
 	$(CC) $(CXXFLAGS) -c -o $@ $^
 
 
-dictionary.dat: Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
+dictionary.dat: src/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
 	$(C) $(CFLAGS) $< -o builddict
+	cp src/Word-List.txt .
 	./builddict > /dev/null
+	rm ./Word-List.txt
 	rm ./builddict
 
-CRC-32.dat: Compile-CRC-32-Lookup-Table.c
+CRC-32.dat: src/Compile-CRC-32-Lookup-Table.c
 	$(C) $(CFLAGS) $^ -o buildcrc
 	./buildcrc >/dev/null
 	rm ./buildcrc
