@@ -25,6 +25,7 @@
 #include <fstream>
 #include <set>
 
+#include "Char.h"
 using namespace std;
 
 const int N_ROWS = 4;
@@ -62,21 +63,6 @@ int* initDawg( const char* file )
 
 
 
-class Char
-{
-private:
-	bool visited;
-	char character;
-public:
-	Char() : visited(true),character(-1) {}
-	Char( char theCharValue ) : visited(false), character(theCharValue) {}
-
-	bool isVisited() const { return visited; }
-	char getChar() const { return character; }
-
-	void setVisited() { visited = true; }
-	void setNotVisited() { visited = false; }
-};
 bool isInBounds( int x, int y, int nRows, int nCols )
 {
 	return (x>=0 && x<nRows && y>=0 && y<nCols);
