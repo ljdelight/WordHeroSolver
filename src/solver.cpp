@@ -50,7 +50,7 @@ int* initDawg( const char* file)
 	std::ifstream input( file, std::fstream::binary | std::fstream::in );
 	if ( !input )
 	{
-		return 0;
+		return NULL;
 	}
 	input.read( (char*)&numberOfNodes, sizeof(int));
 	dawgArray = new int[numberOfNodes];
