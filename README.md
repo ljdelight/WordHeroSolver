@@ -1,7 +1,7 @@
 # WordHeroSolver
-This is a simple recursive solver for the Android game WordHero. 
+This is a simple recursive solver for the Android game WordHero. The game is a 4x4 grid of letters, like Boggle, where the player must find words within the grid.
 
-This solution loads the dictionary into a DAWG and does not continue recursion when an invalid prefix is found. 
+This solution loads the dictionary into a DAWG and does not continue recursion when an invalid prefix is found. So this is fairly efficient.  
 
 ## How to run and use the solver
 To compile the code just use the Makefile: ```$ make```. The Makefile will read the word list and compress it into a binary form.
