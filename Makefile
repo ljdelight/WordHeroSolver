@@ -8,12 +8,14 @@ FILES=src/solver.cpp Makefile $(PROJECT) \
 	includes/Compile-CRC-32-Lookup-Table.c \
 	src/Word-List.txt
 
-$(PROJECT): solver.o dictionary.dat
+$(PROJECT): solver.o Char.o dictionary.dat
 	$(CC) $(CXXFLAGS) $< -o $@
 
 solver.o: src/solver.cpp
 	$(CC) $(CXXFLAGS) -c -o $@ $^
 
+Char.o: src/Char.h
+	$(CC) $(CXXFLAGS) -c -o $@ $^
 
 dictionary.dat: includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
 	$(C) $(CFLAGS) $< -o builddict
