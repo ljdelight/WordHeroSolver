@@ -44,7 +44,7 @@ const int MAX_STRING_LENGTH = 50;
 #define DAWG_NEXT(thearray, theindex) ((thearray[theindex]&END_OF_LIST_BIT_MASK)? 0: theindex + 1)
 #define DAWG_CHILD(thearray, theindex) (thearray[theindex]>>CHILD_BIT_SHIFT)
 
-int* initDawg( const char* file)
+int* initDawg( const char* file )
 {
 	int numberOfNodes, *dawgArray;
 	std::ifstream input( file, std::fstream::binary | std::fstream::in );
@@ -52,9 +52,9 @@ int* initDawg( const char* file)
 	{
 		return NULL;
 	}
-	input.read( (char*)&numberOfNodes, sizeof(int));
+	input.read( (char*)&numberOfNodes, sizeof(int) );
 	dawgArray = new int[numberOfNodes];
-	input.read( (char*)dawgArray, numberOfNodes*sizeof(int));
+	input.read( (char*)dawgArray, numberOfNodes*sizeof(int) );
 	input.close();
 
 	return dawgArray;
@@ -102,7 +102,7 @@ struct sortByStringLength {
 };
 
 
-void solver( set<string,sortByStringLength>& wordsFound, 
+void solvehelper( set<string,sortByStringLength>& wordsFound, 
 				Char* board, const int nRows, const int nCols,
 				char* str, int strLen, const int maxStrLen,
 				int x, int y,
@@ -156,14 +156,14 @@ void solver( set<string,sortByStringLength>& wordsFound,
 		wordsFound.insert(str);
 	}
 
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y-1, dawg, dawgIdx );  // upper-left
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y,   dawg, dawgIdx );  // upper-center
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y+1, dawg, dawgIdx );  // upper-right
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y-1, dawg, dawgIdx );  // left
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y+1, dawg, dawgIdx );  // right
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y-1, dawg, dawgIdx );  // bottom-left
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y,   dawg, dawgIdx );  // bottom-center
-	solver( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y+1, dawg, dawgIdx );  // bottom-right
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y-1, dawg, dawgIdx );  // upper-left
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y,   dawg, dawgIdx );  // upper-center
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x-1, y+1, dawg, dawgIdx );  // upper-right
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y-1, dawg, dawgIdx );  // left
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x,   y+1, dawg, dawgIdx );  // right
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y-1, dawg, dawgIdx );  // bottom-left
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y,   dawg, dawgIdx );  // bottom-center
+	solvehelper( wordsFound, board, nRows, nCols, str, strLen, maxStrLen, x+1, y+1, dawg, dawgIdx );  // bottom-right
 
 	// remove the char from the string and set to unvisited
 	strLen -= 1;
@@ -171,7 +171,22 @@ void solver( set<string,sortByStringLength>& wordsFound,
 }
 
 
+void solve( set<string, sortByStringLength>& wordsFound, int* dawg, Char* board, string input )
+{
+	for ( size_t i = 0; i < input.size(); ++i )
+	{
+		board[i] = Char( input[i] );
+	}
 
+	char str[MAX_STRING_LENGTH];
+	for ( int i = 0; i < N_ROWS; ++i )
+	{
+		for ( int j = 0; j < N_COLS; ++j )
+		{
+			solvehelper( wordsFound, board, N_ROWS, N_COLS, str, 0, MAX_STRING_LENGTH, i, j, dawg );
+		}
+	}
+}
 
 int main( int argc, char* argv[] )
 {
@@ -183,7 +198,6 @@ int main( int argc, char* argv[] )
 	}
 
 	Char* board = new Char[N_ROWS*N_COLS];
-	char str[MAX_STRING_LENGTH];
 	set<string, sortByStringLength> wordsFound;
 
 	//
@@ -210,6 +224,7 @@ int main( int argc, char* argv[] )
 //		cout << *itr << '\n';
 //	}
 
+	
 	//
 	// ASK FOR THE BOARD AND SOLVE IT. REPEAT.
 	//
@@ -217,18 +232,8 @@ int main( int argc, char* argv[] )
 	cout << "Enter board: " << endl;
 	while ( getline( cin,input ) )
 	{
-		for ( size_t i = 0; i < input.size(); ++i )
-		{
-			board[i] = Char( input[i] );
-		}
+		solve( wordsFound, dawg, board, input);
 
-		for ( int i = 0; i < N_ROWS; ++i )
-		{
-			for ( int j = 0; j < N_COLS; ++j )
-			{
-				solver( wordsFound, board, N_ROWS, N_COLS, str, 0, MAX_STRING_LENGTH, i, j, dawg );
-			}
-		}
 		auto itr = wordsFound.begin(), end = wordsFound.end();
 		for ( ; itr != end; ++itr )
 		{
