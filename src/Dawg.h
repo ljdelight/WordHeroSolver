@@ -32,5 +32,4 @@ int* initDawg( const char* file )
 	return dawgArray;
 }
 
-
 #endif
