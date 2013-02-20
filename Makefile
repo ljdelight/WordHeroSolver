@@ -4,25 +4,27 @@ C=gcc
 CFLAGS=
 PROJECT=wordHeroSolver
 FILES=$(PROJECT)  Makefile  \
-	src/solver.cpp src/Char.h src/Dawg.h src/WordHeroSolver.h src/Word-List.txt \
+	src/solver.cpp src/Char.h src/Dawg.h src/WordHeroSolver.h src/WordHeroSolver.cpp \
+	src/Word-List.txt \
 	includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c dictionary.dat \
 	includes/Compile-CRC-32-Lookup-Table.c \
 	
+all: $(PROJECT)
 
-$(PROJECT):  solver.o Char.o Dwag.o WordHeroSolver.o dictionary.dat
-	$(CC) $(CXXFLAGS) $< -o $@
+$(PROJECT): solver.o WordHeroSolver.o Char.o Dawg.o dictionary.dat
+	$(CC) $(CXXFLAGS) -o $@ solver.o WordHeroSolver.o
 
-solver.o: src/solver.cpp
-	$(CC) $(CXXFLAGS) -c -o $@ $^
+solver.o: src/solver.cpp src/WordHeroSolver.h
+	$(CC) $(CXXFLAGS) -c -o $@ $<
 
 Char.o: src/Char.h
-	$(CC) $(CXXFLAGS) -c -o $@ $^
+	$(CC) $(CXXFLAGS) -c -o $@ $<
 
-Dwag.o: src/Dawg.h
-	$(CC) $(CXXFLAGS) -c -o $@ $^
+Dawg.o: src/Dawg.h
+	$(CC) $(CXXFLAGS) -c -o $@ $<
 
-WordHeroSolver.o: src/WordHeroSolver.h
-	$(CC) $(CXXFLAGS) -c -o $@ $^
+WordHeroSolver.o: src/WordHeroSolver.cpp src/WordHeroSolver.h src/Dawg.h src/Char.h
+	$(CC) $(CXXFLAGS) -c -o $@ $<
 
 
 dictionary.dat: includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
