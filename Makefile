@@ -4,12 +4,12 @@ C=gcc
 CFLAGS=
 PROJECT=wordHeroSolver
 FILES=$(PROJECT)  Makefile  \
-	src/solver.cpp src/Char.h src/Dawg.h src/Word-List.txt \
+	src/solver.cpp src/Char.h src/Dawg.h src/WordHeroSolver.h src/Word-List.txt \
 	includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c dictionary.dat \
 	includes/Compile-CRC-32-Lookup-Table.c \
 	
 
-$(PROJECT): solver.o Char.o Dwag.o dictionary.dat
+$(PROJECT):  solver.o Char.o Dwag.o WordHeroSolver.o dictionary.dat
 	$(CC) $(CXXFLAGS) $< -o $@
 
 solver.o: src/solver.cpp
@@ -20,6 +20,10 @@ Char.o: src/Char.h
 
 Dwag.o: src/Dawg.h
 	$(CC) $(CXXFLAGS) -c -o $@ $^
+
+WordHeroSolver.o: src/WordHeroSolver.h
+	$(CC) $(CXXFLAGS) -c -o $@ $^
+
 
 dictionary.dat: includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
 	$(C) $(CFLAGS) $< -o builddict
