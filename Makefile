@@ -3,18 +3,22 @@ CXXFLAGS=-O3 -std=c++11 -Wall
 C=gcc
 CFLAGS=
 PROJECT=wordHeroSolver
-FILES=src/solver.cpp Makefile $(PROJECT) \
+FILES=$(PROJECT)  Makefile  \
+	src/solver.cpp src/Char.h src/Dawg.h src/Word-List.txt \
 	includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c dictionary.dat \
 	includes/Compile-CRC-32-Lookup-Table.c \
-	src/Word-List.txt
+	
 
-$(PROJECT): solver.o Char.o dictionary.dat
+$(PROJECT): solver.o Char.o Dwag.o dictionary.dat
 	$(CC) $(CXXFLAGS) $< -o $@
 
 solver.o: src/solver.cpp
 	$(CC) $(CXXFLAGS) -c -o $@ $^
 
 Char.o: src/Char.h
+	$(CC) $(CXXFLAGS) -c -o $@ $^
+
+Dwag.o: src/Dawg.h
 	$(CC) $(CXXFLAGS) -c -o $@ $^
 
 dictionary.dat: includes/Blitzkrieg_Trie_Attack_Dawg_Creator_Custom_Character_Set.c CRC-32.dat 
